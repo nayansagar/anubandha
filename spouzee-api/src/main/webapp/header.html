@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="/spouzee-api/static/css/styles.css">
+<div class="header-banner" ng-controller="headerCtrl">
+    <div ng-show="showProfile">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#questions">
+                        <img class="header-logo" src="/spouzee-api/static/images/blocked_eclipse_dkblue_cropped_v2.png" align="left">
+                    </a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#questions"><font color="white" size="2"><strong>Home</strong></font></a></li>
+                        <li><a href="#details"><font color="white" size="2"><strong>Profile</strong></font></a></li>
+                        <li><a href="#invite"><font color="white" size="2"><strong>Search</strong></font></a></li>
+                        <li><a href="#expect"><font color="white" size="2"><strong>My Questionnaire</strong></font></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div ng-show="!showProfile">
+        <table>
+            <tr>
+                <td>
+                    <div>
+                        <img class="header-logo" src="/spouzee-api/static/images/blocked_eclipse_dkblue_cropped_v2.png" align="centre">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

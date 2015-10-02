@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+        <encoder>
+            <pattern>%-5p | %d{ISO8601} | %t | %m %n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILEAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- encoders are assigned the type
+                ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <File>/tmp/spouzee-api-logback.log</File>
+        <Append>true</Append>
+        <encoder>
+            <pattern>%-5p | %d{ISO8601} | %t | %m %n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/tmp/spouzee-api-logback.log%d{.yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- the level of the root level is set to DEBUG by default.       -->
+    <root level="INFO">
+        <appender-ref ref="FILEAPPENDER"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

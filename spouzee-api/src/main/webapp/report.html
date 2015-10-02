@@ -1,0 +1,25 @@
+<table>
+    <tr>
+        <td><div ng-include="'/spouzee-api/profile.html'"></div></td>
+        <td>
+            <div class="questions-form">
+                <p class="scenario-text"><font color="#1e8eb8" size="3"><strong>{{question.questionDescription}}</strong></font></p>
+                <!--<p class="scenario-text"><br>{{question.questionDescription}}</p>-->
+                <form>
+                    <div>
+                        <div class="option-button">
+                            <button ng-repeat="x in question.options" type="submit" style="white-space: normal;align:left" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]">
+                                {{ x.description }}
+                            </button>
+                            <br>
+                            <h5 ng-show="question.comments"><u>Comment</u></h5>
+                            <p style="align:center;color:blue"><i>{{question.comments}}</i></p>
+                            <button type="submit" class="btn btn-primary btn-block" ng-click="nextButtonClicked()">Next</button>
+                        </div>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </td>
+</table>
+

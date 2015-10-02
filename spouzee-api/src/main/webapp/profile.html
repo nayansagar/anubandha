@@ -1,0 +1,18 @@
+<div>
+<div class="profile-column" ng-controller="profileCtrl">
+    <img ng-src="/spouzee-api/v1/users/{{userId}}/picture"/>
+    <br><br>
+    <h3><strong>{{profileData.name}}</strong></h3>
+    <br>
+    <table>
+        <tr><td class="profile-data-name" ng-show="profileData.dateOfBirth">Date of birth</td><td class="profile-data-value">{{profileData.dateOfBirth}}</td></tr>
+        <tr><td class="profile-data-name" ng-show="profileData.employment">Employment</td><td class="profile-data-value">{{profileData.employment}}</td></tr>
+        <tr><td class="profile-data-name" ng-show="profileData.qualification">Qualification</td><td class="profile-data-value">{{profileData.qualification}}</td></tr>
+        <tr><td class="profile-data-name" ng-show="profileData.language">Language</td><td class="profile-data-value">{{profileData.language}}</td></tr>
+        <tr><td class="profile-data-name" ng-show="profileData.religion">Religion</td><td class="profile-data-value">{{profileData.religion}}</td></tr>
+        <tr><td class="profile-data-name" ng-show="profileData.caste">Caste</td><td class="profile-data-value">{{profileData.caste}}</td>
+        <tr><td class="profile-data-name" ng-show="profileData.subcaste">Sub caste</td><td class="profile-data-value">{{profileData.subcaste}}</td>
+        </tr>
+    </table>
+</div>
+</div>

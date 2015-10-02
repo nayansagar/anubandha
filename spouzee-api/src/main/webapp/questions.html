@@ -1,0 +1,35 @@
+<table>
+    <tr>
+        <td><div ng-include="'/spouzee-api/profile.html'"></div></td>
+        <td>
+            <div class="questions-form">
+                <p class="scenario-text"><font color="#1e8eb8" size="3"><strong>{{question.questionDescription}}</strong></font></p>
+                <!--<br>
+                <p class="question-text">{{question.questionDescription}}</p>-->
+                <form class="form-vertical" role="form">
+                    <div>
+                        <div class="option-button">
+                            <button ng-repeat="x in question.options" type="submit" style="white-space: normal;" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]" ng-click="submitDetails(x.id)">
+                                {{ x.description }}
+                            </button>
+                            <br>
+                            <div class="form-group">
+                                <label for="optDesc2" class="col-sm-2 control-label"></label>
+                                <div class="col-sm-14">
+                                    <textarea maxlength="140" id="optDesc2" class="form-control" ng-model="addlText" placeholder="Any other thoughts? Use this space..."></textarea>
+                                </div>
+                            </div>
+                            <!--<textarea maxlength="140" class="option-textarea" ng-model="addlText" placeholder="Any other thoughts? Use this space...">
+                            </textarea>-->
+                            <div class="btn-group btn-group-justified">
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-primary btn-block" ng-click="nexButtonClicked()">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </td>
+</table>

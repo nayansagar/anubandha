@@ -1,0 +1,66 @@
+<table>
+    <tr>
+        <td>
+            <div ng-include="'/spouzee-api/profile.html'"></div>
+        </td>
+        <td>
+            <div class="details-form" ng-controller="detailsCtrl">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="Name" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="Name" placeholder="Name" ng-model="name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="dob" placeholder="Date of Birth (dd/mm/yyyy)" ng-model="dob">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Employment" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="Employment" placeholder="Employment" ng-model="employment">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Qualification" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="Qualification" placeholder="Qualification" ng-model="qualification">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Language" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="Language" placeholder="Language" ng-model="language">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Religion" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="Religion" placeholder="Religion" ng-model="religion">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Caste" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="Caste" placeholder="Caste" ng-model="caste">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subCaste" class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="subCaste" placeholder="Subcaste" ng-model="subcaste">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-success" ng-click="submitDetails()">Next</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>

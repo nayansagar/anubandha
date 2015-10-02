@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.spouzee.server"/>
+
+    <bean id="placeholderConfig"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:config-${environment}.properties"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean id="spzDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="dataSourceName" value="spz_db"/>
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="${DB_JDBC_URL}"/>
+        <property name="user" value="${DB_USER}"/>
+        <property name="password" value="${DB_PASSWORD}"/>
+        <property name="maxPoolSize" value="${DB_MAX_POOL_SIZE}"/>
+        <property name="maxStatements" value="${DB_MAX_STATEMENTS}"/>
+        <property name="minPoolSize" value="${DB_MIN_POOL_SIZE}"/>
+        <property name="maxIdleTime" value="${DB_MAX_IDLE_TIME}"/>
+        <property name="idleConnectionTestPeriod" value="${DB_IDLE_CONNECTION_TEST_PERIOD}"/>
+        <property name="preferredTestQuery" value="${DB_PREFERRED_TEST_QUERY}"/>
+        <property name="checkoutTimeout" value="${DB_CHECKOUT_TIMEOUT}"/>
+        <property name="acquireRetryAttempts" value="${DB_ACQUIRE_RETRY_ATTEMPT}"/>
+        <property name="acquireRetryDelay" value="${DB_ACQUIRE_RETRY_DELAY}"/>
+    </bean>
+
+
+    <bean id="spzSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="spzDataSource"/>
+        <property name="packagesToScan" value="com.spouzee.server.db.entities"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                <prop key="show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Hibernate Template Definition -->
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+        <property name="sessionFactory" ref="spzSessionFactory"/>
+    </bean>
+
+    <bean id="spzTransactionManagerBean" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="spzSessionFactory"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="spzTransactionManagerBean"/>
+
+    <tx:advice id="txAdvice" transaction-manager="spzTransactionManagerBean">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+            <tx:method name="create*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+            <tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+            <tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+            <tx:method name="load*" propagation="REQUIRED" isolation="READ_COMMITTED" read-only="true"/>
+            <tx:method name="get*" propagation="REQUIRED" isolation="READ_COMMITTED" read-only="true"/>
+            <tx:method name="find*" propagation="REQUIRED" isolation="READ_COMMITTED" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut expression="execution(* com.spouzee.server.db.dao.*Dao.*(..))" id="allDaos"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allDaos" />
+    </aop:config>
+
+</beans>
