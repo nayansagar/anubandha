@@ -1,7 +1,9 @@
 package com.spouzee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spouzee.server.api.matcher.IMatcher;
 import com.spouzee.server.api.schema.QuestionResponse;
+import com.spouzee.server.api.service.QuestionService;
 import com.spouzee.server.api.service.UserService;
 import com.spouzee.server.api.social.EMailHelper;
 import com.spouzee.server.api.social.FacebookHelper;
@@ -27,6 +29,8 @@ public class UserServiceTest {
     SpzUserDao spzUserDao;
     SpzQuestionDao spzQuestionDao;
     FacebookHelper facebookHelper;
+    IMatcher matcher;
+    QuestionService questionService;
 
     @BeforeTest
     public void setUp(){
@@ -34,7 +38,8 @@ public class UserServiceTest {
         spzQuestionDao = Mockito.mock(SpzQuestionDao.class);
         facebookHelper = Mockito.mock(FacebookHelper.class);
         EMailHelper eMailHelper = Mockito.mock(EMailHelper.class);
-        userService = new UserService(spzUserDao, spzQuestionDao, facebookHelper, eMailHelper);
+        matcher = Mockito.mock(IMatcher.class);
+        userService = new UserService(spzUserDao, spzQuestionDao, facebookHelper, eMailHelper, matcher, questionService);
     }
 
     //@Test
@@ -55,7 +60,6 @@ public class UserServiceTest {
         List<Response> responses = new ArrayList<>();
         for(int i=0; i<count; i++){
             Response res = new Response();
-            res.setId(i);
             res.setQuestion(createQuestion(10 + i));
             if(i==0){
                 res.setOption("1,3,5");

@@ -21,9 +21,6 @@ public class Scenario {
     @Column(name = "scenario_description")
     private String scenarioDescription;
 
-    @OneToMany(mappedBy = "scenario",cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
-    private List<Question> questions;
-
     public long getId() {
         return id;
     }
@@ -46,13 +43,5 @@ public class Scenario {
 
     public void setScenarioDescription(String scenarioDescription) {
         this.scenarioDescription = scenarioDescription;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
     }
 }

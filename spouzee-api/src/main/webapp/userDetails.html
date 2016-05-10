@@ -1,0 +1,16 @@
+<div class="inner-banner">
+    <div align="center">
+        <ul class="nav navbar-nav">
+            <li style="display:inline;" ng-click="onClickTab('Basic Information')"><a href=""><font color="#1e8eb8" size="2">Basic Information</font></a></li>
+            <li style="display:inline;" ng-click="onClickTab('Questions')"><a href=""><font color="#1e8eb8" size="2">Questions</font></a></li>
+            <li style="display:inline;" ng-click="onClickTab('Scenarios')"><a href=""><font color="#1e8eb8" size="2">Scenarios</font></a></li>
+            <!--<li style="display:inline;"><a><font color="white" size="2">  Copyright 2016  </font></a></li>-->
+        </ul>
+    </div>
+
+    <div style="overflow:auto; overflow-x: hidden; height:500px; width:75%;">
+        <!--<div ng-include="'/spouzee-api/reportScrolling.html'" ng-controller="scrollReportCtrl"/>-->
+        <ng-include src="activeTab"></ng-include>
+        <!--<div ng-include="{{activeTab}}"/>-->
+    </div>
+</div>

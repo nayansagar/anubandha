@@ -31,13 +31,8 @@ public class SpzQuestionDaoTest extends AbstractTestNGSpringContextTests{
         Question question = questionList.get(0);
         Assert.assertNotNull(question);
         Assert.assertNotNull(question.getOptions());
-        Assert.assertNotNull(question.getScenario());
         System.out.println("*********** question id : " + question.getId());
         System.out.println("*********** question desc : " + question.getQuestionDescription());
-        System.out.println("*********** question short desc : " + question.getShortDescription());
-        System.out.println("*********** scenario id : "+question.getScenario().getId());
-        System.out.println("*********** scenario desc : "+question.getScenario().getScenarioDescription());
-        System.out.println("*********** scenario title : "+question.getScenario().getScenarioTitle());
         for(Option option : question.getOptions()){
             System.out.println("*********** option id : " + option.getId());
             System.out.println("*********** option desc : "+option.getOptionDescription());
@@ -48,6 +43,6 @@ public class SpzQuestionDaoTest extends AbstractTestNGSpringContextTests{
 
     @Test
     public void saveResponseTest() throws InvalidUserException, InvalidOptionException, InvalidQuestionException {
-        spzQuestionDao.saveResponse(110,1,"1", "abcd");
+        spzQuestionDao.saveResponse(158,4,"12", "efgh");
     }
 }

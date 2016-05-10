@@ -9,9 +9,12 @@ public class CreateUserResponse {
 
     private boolean userAlreadyExists;
 
-    public CreateUserResponse(long userId, boolean userAlreadyExists) {
+    private boolean profileDataSubmitted;
+
+    public CreateUserResponse(long userId, boolean userAlreadyExists, boolean profileDataSubmitted) {
         this.userId = userId;
         this.userAlreadyExists = userAlreadyExists;
+        this.profileDataSubmitted = profileDataSubmitted;
     }
 
     public long getUserId() {
@@ -20,5 +23,9 @@ public class CreateUserResponse {
 
     public boolean isUserAlreadyExists() {
         return userAlreadyExists;
+    }
+
+    public boolean isProfileDataSubmitted() {
+        return profileDataSubmitted;
     }
 }

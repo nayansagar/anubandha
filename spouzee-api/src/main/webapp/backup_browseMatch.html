@@ -1,0 +1,24 @@
+<table style="margin-top:5%;">
+    <tr align="top">
+        <td valign="top" width="20%">
+            <form class="form-vertical" role="form">
+                <div>
+                    <div class="option-button">
+                        <button ng-repeat="x in matches" type="submit" style="white-space: normal;" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.userId)]" ng-click="viewMatch(x.userId)">
+                            <font color="#1e8eb8" size="3"><strong>{{ x.name }}</strong></font><br>
+                            Your expectations met  : <font color="#1e8eb8" size="2"><strong>{{x.selfExpectationMatch}}%</strong></font><br>
+                            Their expectations met : <font color="#1e8eb8" size="2"><strong>{{x.otherExpectationMatch}}%</strong></font>
+                        </button>
+                        <br>
+                    </div>
+                </div>
+                <br>
+            </form>
+        </td>
+        <td width="50%" align="left">
+            <div style="overflow:scroll; overflow-x: hidden; height:500px; width:70%;" >
+                <div ng-include="'/spouzee-api/reportScrolling.html'" ng-controller="scrollReportCtrl"/>
+            </div>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,62 @@
+<div ng-controller="basicInfoCtrl">
+    <div align="left">
+        <h3 align="left"><font color="#1e8eb8"><strong>{{profileData.name}}</strong></font></h3>
+    </div>
+    <table class="profile-info-table">
+        <!--<tr>
+            <td style="width:40%;">
+                <div align="center">
+                    <img ng-src="/spouzee-api/v1/users/{{searchUserId}}/picture"/>
+                </div>
+            </td>
+        </tr>-->
+        <tr>
+            <td align="left" style="width:40%;">
+                <div align="center">
+                    <img http-src="/spouzee-api/v1/users/{{searchUserId}}/picture?ru={{userId}}"/>
+                </div>
+            </td>
+            <td valign="top"><div><p class="scenario-text"><font color="#ffffff" size="3">......</font></p></div></td>
+            <td align="right" style="width:60%;">
+                <table align="center" valign="top">
+                    <tr ng-show="profileData.dateOfBirth"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Date of birth</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;">{{profileData.dateOfBirth}}</td></tr>
+                    <tr ng-show="profileData.employment"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Employment</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.employment}}</td></tr>
+                    <tr ng-show="profileData.qualification"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Qualification</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.qualification}}</td></tr>
+                    <tr ng-show="profileData.language"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Language</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.language}}</td></tr>
+                    <tr ng-show="profileData.religion"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Religion</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.religion}}</td></tr>
+                    <tr ng-show="profileData.caste"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Caste</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.caste}}</td>
+                    <tr ng-show="profileData.subcaste"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Sub caste</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.subcaste}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <!-- slider container -->
+    <div class="container slider">
+
+        <!-- enumerate all photos -->
+        <img
+                ng-repeat="photo in photos"
+                class="slide"
+                ng-swipe-right="showPrev()"
+                ng-swipe-left="showNext()"
+                ng-show="isGalleryActive($index)"
+                http-src="/spouzee-api/v1/users/{{searchUserId}}/images/{{photo.id}}?size=large&ru={{userId}}"
+                />
+
+        <!-- prev / next controls -->
+        <a class="arrowprev" href="#" ng-click="showPrev()"></a>
+        <a class="arrownext" href="#" ng-click="showNext()"></a>
+
+        <!-- extra navigation controls -->
+        <ul class="navv">
+            <li style="display:inline;" ng-repeat="photo in photos" ng-class="{'active':isGalleryActive($index)}">
+                <img
+                        http-src="/spouzee-api/v1/users/{{searchUserId}}/images/{{photo.id}}?size=small&ru={{userId}}"
+                        alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);" />
+            </li>
+        </ul>
+    </div>
+</div>

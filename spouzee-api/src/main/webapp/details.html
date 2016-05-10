@@ -1,66 +1,163 @@
+<link rel="stylesheet" href="/spouzee-api/static/css/gallery.css">
 <table>
     <tr>
-        <td>
-            <div ng-include="'/spouzee-api/profile.html'"></div>
+        <td valign="cnter">
+            <div class="profile-pic">
+                <img http-src="/spouzee-api/v1/users/{{userId}}/picture?size=large&ru={{userId}}"/>
+            </div>
         </td>
-        <td>
-            <div class="details-form" ng-controller="detailsCtrl">
+        <td valign="top">
+            <div class="details-form">
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="Name" class="col-sm-2 control-label"></label>
+                        <label for="Name" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Name</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="Name" placeholder="Name" ng-model="name">
+                            <input class="form-control" id="Name" placeholder="{{name}}" ng-model="name">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="dob" class="col-sm-2 control-label"></label>
+                        <label for="dob" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Date of Birth</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="dob" placeholder="Date of Birth (dd/mm/yyyy)" ng-model="dob">
+                            <input class="form-control" id="dob" placeholder="{{dob}}" ng-model="dob">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Employment" class="col-sm-2 control-label"></label>
+                        <label for="maritalStatus" class="col-sm-2 control-label" style="margin-left:17%;"><font color="#1e8eb8" size="2">Marital status</font></label>
+                        <select id="maritalStatus" ng-model="maritalStatus" name="maritalStatus"  style="margin-left:1%;width:10%;">
+                            <option value="single">Single</option>
+                            <option value="widowed">Widowed</option>
+                            <option value="divorced">Divorced</option>
+                            <option value="separated">Separated</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Employment" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Employment</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="Employment" placeholder="Employment" ng-model="employment">
+                            <input class="form-control" id="Employment" placeholder="{{employment}}" ng-model="employment">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Qualification" class="col-sm-2 control-label"></label>
+                        <label for="Qualification" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Qualification</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="Qualification" placeholder="Qualification" ng-model="qualification">
+                            <input class="form-control" id="Qualification" placeholder="{{qualification}}" ng-model="qualification">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Language" class="col-sm-2 control-label"></label>
+                        <label for="Language" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Language</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="Language" placeholder="Language" ng-model="language">
+                            <input class="form-control" id="Language" placeholder="{{language}}" ng-model="language">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Religion" class="col-sm-2 control-label"></label>
+                        <label for="Religion" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Religion</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="Religion" placeholder="Religion" ng-model="religion">
+                            <input class="form-control" id="Religion" placeholder="{{religion}}" ng-model="religion">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Caste" class="col-sm-2 control-label"></label>
+                        <label for="Caste" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Caste</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="Caste" placeholder="Caste" ng-model="caste">
+                            <input class="form-control" id="Caste" placeholder="{{caste}}" ng-model="caste">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="subCaste" class="col-sm-2 control-label"></label>
+                        <label for="subCaste" class="col-sm-2 control-label"><font color="#1e8eb8" size=2">Subcaste</font></label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="subCaste" placeholder="Subcaste" ng-model="subcaste">
+                            <input class="form-control" id="subCaste" placeholder="{{subcaste}}" ng-model="subcaste">
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-success" ng-click="submitDetails()">Next</button>
-                        </div>
+                        <label for="role" class="col-sm-2 control-label" style="margin-left:17%;"><font color="#1e8eb8" size=2">Select Role</font></label>
+                        <select id="role" ng-model="role" name="role"  style="margin-left:1%;width:10%;">
+                            <option value="Boy">Boy</option>
+                            <option value="Girl">Girl</option>
+                        </select>
                     </div>
                 </form>
             </div>
+        </td>
+        <td valign="top">
+            <table>
+                <tr>
+                    <td>
+                        <div class="upload-form">
+                            <br><br>Upload photos of yourself, your family, your extended family, your friends...
+                            <br>Anything that gives an insight into your life to the prospective alliances...</font>
+                            </h5>
+                            </br></br>
+                            <form id="photo-upload">
+                                <table>
+                                    <tr>
+                                        <td><input type="file" name="attachment" size="30"/></td>
+                                        <td><input type="text" name="description" placeholder="Add description"></td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-4">
+                                                    <button type="submit" class="btn btn-info" ng-click="uploadFiles()">Upload</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!--<p>
+                                    Select a file <input type="file" name="attachment" size="50"/>
+                                </p>
+                                <p>
+                                    <input type="text" name="description" placeholder="Add description">
+                                </p>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-4">
+                                        <button type="submit" class="btn btn-info" ng-click="uploadFiles()">Upload</button>
+                                    </div>
+                                </div>-->
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- slider container -->
+                        <div class="container slider-profile">
+
+                            <!-- enumerate all photos -->
+                            <img
+                                    ng-repeat="photo in photos"
+                                    class="slide-profile"
+                                    ng-swipe-right="showPrev()"
+                                    ng-swipe-left="showNext()"
+                                    ng-show="isGalleryActive($index)"
+                                    http-src="/spouzee-api/v1/users/{{userId}}/images/{{photo.id}}?size=medium&ru={{userId}}"
+                                    />
+
+                            <!-- prev / next controls -->
+                            <a class="arrowprev" href="#" ng-click="showPrev()"></a>
+                            <a class="arrownext" href="#" ng-click="showNext()"></a>
+
+                            <!-- extra navigation controls -->
+                            <ul class="navv-profile">
+                                <li style="display:inline;" ng-repeat="photo in photos" ng-class="{'active':isGalleryActive($index)}">
+                                    <img
+                                            http-src="/spouzee-api/v1/users/{{userId}}/images/{{photo.id}}?size=small&ru={{userId}}"
+                                            alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);" />
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <div class="col-sm-offset-10 col-sm-4">
+                        <button type="submit" class="btn btn-success" ng-click="submitDetails()">Next</button>
+                    </div>
+                </div>
+            </form>
         </td>
     </tr>
 </table>

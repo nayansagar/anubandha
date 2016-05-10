@@ -20,9 +20,9 @@
             <fileNamePattern>/tmp/spouzee-api-logback.log%d{.yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
     </appender>
-
+    <logger name="org.hibernate" level="WARN"/>
     <!-- the level of the root level is set to DEBUG by default.       -->
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="FILEAPPENDER"/>
         <appender-ref ref="STDOUT"/>
     </root>

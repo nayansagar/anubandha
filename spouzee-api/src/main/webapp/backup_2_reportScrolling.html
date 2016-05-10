@@ -1,0 +1,117 @@
+<link rel="stylesheet" href="/spouzee-api/static/css/gallery.css">
+<table class="profile-info-table">
+    <tr>
+        <td>
+            <div class="profile-column">
+                <h3 align="center"><font color="#1e8eb8"><strong>{{profileData.name}}</strong></font></h3>
+            </div>
+        </td>
+        <td align="right">
+            <div ng-show="displayExpressInterestButton" class="form-group" style="float: right;">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success" ng-click="showInterest(searchUserId)">Show Interest</button>
+                </div>
+            </div>
+            <div ng-show="displayRespondToInterestButton" class="form-group" style="float: right;">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success" ng-click="respondToInterest(searchUserId)">Share Contact</button>
+                </div>
+            </div>
+            <div ng-show="displayShowContactButton" class="form-group" style="float: right;">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success" ng-click="showContact(searchUserId)">Contact</button>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="profile-column">
+                <img ng-src="/spouzee-api/v1/users/{{searchUserId}}/picture"/>
+            </div>
+        </td>
+        <td class="profile-details-table">
+            <table valign="top">
+                <!--<tr>
+                    <td>
+                        <div ng-show="displayExpressInterestButton" class="form-group" style="float: right;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success" ng-click="showInterest(searchUserId)">Show Interest</button>
+                            </div>
+                        </div>
+                        <div ng-show="displayRespondToInterestButton" class="form-group" style="float: right;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success" ng-click="respondToInterest(searchUserId)">Share Contact</button>
+                            </div>
+                        </div>
+                        <div ng-show="displayShowContactButton" class="form-group" style="float: right;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success" ng-click="showContact(searchUserId)">Contact</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>-->
+                <tr><td ng-show="profileData.dateOfBirth"><font color="#1e8eb8"><b>Date of birth</b></font></td><td>{{profileData.dateOfBirth}}</td></tr>
+                <tr><td ng-show="profileData.employment"><font color="#1e8eb8"><b>Employment</b></font></td><td align="right">{{profileData.employment}}</td></tr>
+                <tr><td ng-show="profileData.qualification"><font color="#1e8eb8"><b>Qualification</b></font></td><td align="right">{{profileData.qualification}}</td></tr>
+                <tr><td ng-show="profileData.language"><font color="#1e8eb8"><b>Language</b></font></td><td align="right">{{profileData.language}}</td></tr>
+                <tr><td ng-show="profileData.religion"><font color="#1e8eb8"><b>Religion</b></font></td><td align="right">{{profileData.religion}}</td></tr>
+                <tr><td ng-show="profileData.caste"><font color="#1e8eb8"><b>Caste</b></font></td><td align="right">{{profileData.caste}}</td>
+                <tr><td ng-show="profileData.subcaste"><font color="#1e8eb8"><b>Sub caste</b></font></td><td align="right">{{profileData.subcaste}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<!-- slider container -->
+<div class="container slider">
+
+    <!-- enumerate all photos -->
+    <img
+        ng-repeat="photo in photos"
+        class="slide"
+        ng-swipe-right="showPrev()"
+        ng-swipe-left="showNext()"
+        ng-show="isGalleryActive($index)"
+        ng-src="/spouzee-api/v1/users/{{userId}}/images/{{photo.id}}?size=large"
+    />
+
+    <!-- prev / next controls -->
+    <a class="arrowprev" href="#" ng-click="showPrev()"></a>
+    <a class="arrownext" href="#" ng-click="showNext()"></a>
+
+    <!-- extra navigation controls -->
+    <ul class="navv">
+        <li ng-repeat="photo in photos" ng-class="{'active':isGalleryActive($index)}">
+            <img
+                    src="/spouzee-api/v1/users/{{userId}}/images/{{photo.id}}?size=small"
+                    alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);" />
+        </li>
+    </ul>
+</div>
+<table>
+    <br>
+    <tr ng-repeat="q in questions">
+        <!--<td><div ng-include="'/spouzee-api/profile.html'"></div></td>-->
+        <td>
+            <div class="scroll-questions-form">
+                <p class="scenario-text"><font color="#1e8eb8" size="3"><strong>{{q.questionDescription}}</strong></font></p>
+                <!--<p class="scenario-text"><br>{{question.questionDescription}}</p>-->
+                <form>
+                    <div>
+                        <div class="scroll-option-button">
+                            <button ng-repeat="x in q.options" type="submit" style="white-space: normal;align:left" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]">
+                                {{ x.description }}
+                            </button>
+                            <br>
+                            <h5 ng-show="q.comments"><u>Comment</u></h5>
+                            <p style="align:center;color:blue"><i>{{q.comments}}</i></p>
+                            <!--<button type="submit" class="btn btn-primary btn-block" ng-click="nextButtonClicked()">Next</button>-->
+                        </div>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </td>
+</table>
+

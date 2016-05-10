@@ -10,10 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Sagar on 8/2/2015.
@@ -33,7 +31,7 @@ public class SpzUserDaoTest extends AbstractTestNGSpringContextTests{
         spzUserDao.deleteUser(user.getId());
     }
 
-    @Test
+    /*@Test
     public void createUserCredentialTest(){
         User user = createMinimalUserEntityObject("newuser");
         UserCredential userCredential = new UserCredential();
@@ -43,7 +41,7 @@ public class SpzUserDaoTest extends AbstractTestNGSpringContextTests{
         user.setUserCredential(userCredential);
         spzUserDao.createUser(user);
 
-    }
+    }*/
 
     @Test
     public void createUserWithLinkTest(){
@@ -68,7 +66,7 @@ public class SpzUserDaoTest extends AbstractTestNGSpringContextTests{
         existingUser.setReligion("rel");
         existingUser.setQualification("qu");
         existingUser.setCaste("cs");
-        existingUser.setDateOfBirth(Calendar.getInstance());
+        existingUser.setDateOfBirth(new Date());
         existingUser.setEmployment("empl");
         existingUser.setLanguage("lang");
         existingUser.setName("nma");
@@ -94,7 +92,7 @@ public class SpzUserDaoTest extends AbstractTestNGSpringContextTests{
     @Test
     public void getUserByEmailTest(){
         User user = spzUserDao.getUserByEmail("df@dfbgb");
-        System.out.println(user.getId() + ", " + user.getEmail() + ", " + user.getUserCredential().getPasswordHash());
+        System.out.println(user.getId() + ", " + user.getEmail());
     }
 
     @Test
@@ -171,6 +169,179 @@ public class SpzUserDaoTest extends AbstractTestNGSpringContextTests{
         spzUserDao.addQuestion(question);
     }
 
+    @Test
+    public void testGetUserWithExpectations(){
+        User user = spzUserDao.getUserWithExpectations(155);
+        System.out.println(user.getId());
+        System.out.println(user.getExpectations().size());
+        System.out.println(user.getExpectations().get(0).getQuestion().getId() + " : " + user.getExpectations().get(0).getOption());
+    }
+
+    @Test
+    public void testGetUserWithResponses(){
+        User user = spzUserDao.getUserWithResponses(154);
+        System.out.println(user.getId());
+        System.out.println(user.getResponses().size());
+        System.out.println(user.getResponses().get(0).getQuestion().getId() + " : " + user.getResponses().get(0).getOption());
+    }
+
+    @Test
+    public void testGetUserWithExpectationsAndResponses(){
+        User user = spzUserDao.getUserWithExpectationsAndResponses(158);
+        System.out.println(user.getId());
+
+        System.out.println(user.getExpectations().size());
+        System.out.println(user.getExpectations().get(0).getQuestion().getId() + " : " + user.getExpectations().get(0).getOption());
+
+        System.out.println(user.getResponses().size());
+        System.out.println(user.getResponses().get(0).getQuestion().getId() +" : "+user.getResponses().get(0).getOption());
+    }
+
+    @Test
+    public void testGetMatchingResponses(){
+        User u = spzUserDao.getUserWithExpectationsAndResponses(158);
+        u.getExpectations();
+        List<Response> matchingResponses = spzUserDao.getMatchingResponses(158);
+        System.out.println(matchingResponses.size());
+        for(Response res : matchingResponses){
+            System.out.println(res.getUser().getId()+" -- "+res.getQuestion().getId() +" : "+res.getOption());
+        }
+    }
+
+    @Test
+    public void testGetResponseNative(){
+        ReportItem ri = spzUserDao.getResponseNative(160, 1);
+        System.out.println("OPTS :::: " + ri.getOptions());
+    }
+
+    @Test
+    public void testSaveImage() throws IOException {
+        spzUserDao.saveImage(160, getImageContent(), "", "Mirror");
+    }
+
+    @Test
+    public void testGetImageContent() throws IOException {
+        UserImage userImage = spzUserDao.getImageContent(1);
+        writeImageContent(userImage.getContent());
+    }
+
+    @Test
+    public void testGetUserWithImages(){
+        User user = spzUserDao.getUserWithImages(160);
+        org.testng.Assert.assertTrue(user.getUserImages().size() == 1);
+        org.testng.Assert.assertTrue(user.getUserImages().get(0).getId() == 1);
+        Assert.assertTrue(user.getUserImages().get(0).getDescription().equals("Mirror"));
+    }
+
+    @Test
+    public void saveMatchTest(){
+        MatchEntity me = spzUserDao.saveMatch(158, 66.6, 156, 92.3);
+        System.out.println(me);
+    }
+
+    @Test
+    public void saveInterestTest(){
+        spzUserDao.saveInterest(160, 158);
+    }
+
+    @Test
+    public void saveInterestResponseTest(){
+        spzUserDao.saveInterestResponse(158, 160);
+    }
+
+    @Test
+    public void getAllMatchesTest(){
+        List<MatchEntity> matchEntities = spzUserDao.fetchAllMatches(158);
+        for(MatchEntity matchEntity : matchEntities){
+            System.out.println(matchEntity.getUserId1() + " : " + matchEntity.getUserId2());
+        }
+    }
+
+    @Test
+    public void getRandomQuestionTest(){
+        List<Question> questions = spzUserDao.getRandomQuestion(158, 2);
+        for(Question q : questions){
+            System.out.println(q.getId()+" -- "+q.getQuestionDescription());
+        }
+    }
+
+    @Test
+    public void testGetMatch(){
+        MatchEntity matchEntity = spzUserDao.getMatch(158, 160);
+        System.out.println("UID1 : "+matchEntity.getUserId1());
+        System.out.println("UID2 : "+matchEntity.getUserId2());
+        System.out.println("UID1EM : "+matchEntity.getUser1ExpectationMet());
+        System.out.println("UID2EM : "+matchEntity.getUser2ExpectationMet());
+    }
+
+    @Test
+    public void testAddMessageToScenario(){
+        spzUserDao.addMessageToScenario(160, 13, 4, true, "Test Message................");
+    }
+
+    @Test
+    public void testGetScenarioDiscussion(){
+        List<ScenarioDiscussion> scenarioDiscussionList = spzUserDao.getScenarioDiscussion(4, 13);
+        System.out.println(scenarioDiscussionList);
+    }
+
+    @Test
+    public void testGetOngoingScenario(){
+        List<Scenario> scenarios = spzUserDao.getOngoingScenario(4);
+        for(Scenario s : scenarios){
+            System.out.println(s.getId()+"  "+s.getScenarioDescription());
+        }
+    }
+
+    @Test
+    public void testGetScenarioForMatch(){
+        List<Scenario> scenarios = spzUserDao.getScenarioForMatch(4, 31);
+        for(Scenario scenario : scenarios){
+            System.out.println(scenario.getId()+" "+scenario.getScenarioDescription());
+        }
+    }
+
+    @Test
+    public void testMarkDiscussionCompleteForUser(){
+        spzUserDao.markDiscussionCompleteForUser(4, 13, 158);
+    }
+
+    @Test
+    public void testCreateSession(){
+        String sessionId = spzUserDao.createSession(158);
+        System.out.println("SessionId : " + sessionId);
+    }
+
+    @Test
+    public void testCloseSession(){
+        spzUserDao.closeSession("760fff05-771a-4f76-8722-d52c8be95a13");
+    }
+
+    @Test
+    public void testIsSessionValid(){
+        System.out.println(spzUserDao.isSessionValid("0dd40f97-4510-454f-9332-88f228df9396", 158));
+    }
+
+    @Test
+    public void testRefreshSession(){
+        String sessionId = spzUserDao.refreshSession("a5318810-8b65-484b-bb62-d606b3f8ddb2");
+        System.out.println(sessionId);
+    }
+
+    private byte[] getImageContent() throws IOException {
+        FileInputStream fis = new FileInputStream("C:\\Users\\Sagar\\Desktop\\wallpaper.jpg");
+        byte[] b = new byte[fis.available()];
+        fis.read(b);
+        return b;
+    }
+
+    private void writeImageContent(byte[] bytes) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\Sagar\\Desktop\\out.jpg");
+        fileOutputStream.write(bytes);
+        fileOutputStream.flush();
+        fileOutputStream.close();
+    }
+
     private UserLink getSampleUserLinkEntityObject(User user, String linkType) {
         UserLink userLink = new UserLink();
         userLink.setAccessToken("SampleAccessToken");
@@ -196,7 +367,7 @@ public class SpzUserDaoTest extends AbstractTestNGSpringContextTests{
         user.setCaste("TestCaste");
         user.setSubcaste("TestSubcaste");
         user.setLanguage("Kannada");
-        user.setDateOfBirth(GregorianCalendar.getInstance());
+        user.setDateOfBirth(new Date());
         user.setQualification("TestQual");
         user.setRole("Boy");
         user.setEmployment("TestEmpl");

@@ -17,7 +17,7 @@ public class UserDetails {
 
     private String name;
 
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     private String religion;
 
@@ -33,6 +33,8 @@ public class UserDetails {
 
     private String role;
 
+    private String maritalStatus;
+
     private List<UserToken> userTokenList;
 
     public String getName() {
@@ -43,11 +45,11 @@ public class UserDetails {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -115,12 +117,11 @@ public class UserDetails {
         this.userTokenList = userTokenList;
     }
 
-    public static void main(String[] args) throws IOException {
-        String json = "{\"dateOfBirth\" : \"1987-06-20\"}";
-        ObjectMapper objectMapper = new ObjectMapper();
-        UserDetails userDetails = objectMapper.readValue(json.getBytes(), UserDetails.class);
-        System.out.println(userDetails.getDateOfBirth().toString());
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        System.out.println(df.format(userDetails.getDateOfBirth()));
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
     }
 }

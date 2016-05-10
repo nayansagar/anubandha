@@ -15,15 +15,8 @@ public class Question {
     @Id
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "scenario_id", nullable = true)
-    private Scenario scenario;
-
     @Column(name = "question_description")
     private String questionDescription;
-
-    @Column(name = "short_description", nullable = true)
-    private String shortDescription;
 
     @Column(name = "response_type")
     private int responseType;
@@ -50,28 +43,12 @@ public class Question {
         this.id = id;
     }
 
-    public Scenario getScenario() {
-        return scenario;
-    }
-
-    public void setScenario(Scenario scenario) {
-        this.scenario = scenario;
-    }
-
     public String getQuestionDescription() {
         return questionDescription;
     }
 
     public void setQuestionDescription(String questionDescription) {
         this.questionDescription = questionDescription;
-    }
-
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
     }
 
     public int getResponseType() {

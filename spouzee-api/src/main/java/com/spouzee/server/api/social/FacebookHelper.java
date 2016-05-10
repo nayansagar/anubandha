@@ -5,8 +5,6 @@ import com.restfb.FacebookClient;
 import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.exception.FacebookOAuthException;
-import com.restfb.experimental.api.Users;
-import com.restfb.experimental.api.impl.UsersImpl;
 import com.restfb.types.User;
 import com.spouzee.server.api.config.SpzConfig;
 import org.apache.commons.io.IOUtils;
@@ -16,8 +14,7 @@ import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -30,6 +27,8 @@ import java.util.Date;
  */
 @Component
 public class FacebookHelper {
+
+    public enum FBImageType{small, large};
 
     public static class ExtendedToken{
         private String accessToken;
@@ -57,12 +56,23 @@ public class FacebookHelper {
     @Autowired
     public FacebookHelper(SpzConfig spzConfig){
         this.spzConfig = spzConfig;
+    }
+
+    @PostConstruct
+    public void getFBAccessToken() {
         appId = spzConfig.getStringProperty("facebook.appId");
         appSecret = spzConfig.getStringProperty("facebook.appSecret");
         FacebookClient facebookClient = new DefaultFacebookClient(Version.VERSION_2_4);
-        FacebookClient.AccessToken accessToken = facebookClient.obtainAppAccessToken(appId, appSecret);
+        FacebookClient.AccessToken accessToken = null;
+        do{
+            accessToken = facebookClient.obtainAppAccessToken(appId, appSecret);
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                //Do Nothing
+            }
+        }while(accessToken == null);
         appFacebookClient = new DefaultFacebookClient(accessToken.getAccessToken(), Version.VERSION_2_4);
-
     }
 
     public byte[] getProfilePictureSpringImpl(String accessToken){
@@ -88,13 +98,20 @@ public class FacebookHelper {
         return new ExtendedToken(accessToken, tokenExpiry);
     }
 
-    public byte[] getUserProfilePicture(String userId){
+    public String getUserEmail(String accessToken){
+        FacebookClient facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_4);
+        try{
+            User fbUser = (User)facebookClient.fetchObject("me", User.class, Parameter.with("fields", "email"));
+            return fbUser.getEmail();
+        }catch (FacebookOAuthException e){
+            return null;
+        }
+    }
+
+    public byte[] getUserProfilePicture(String userId, String fbImageType){
 
         try{
-            User fbUser = appFacebookClient.fetchObject(userId, User.class, Parameter.with("fields", "email,picture.type(large)"));
-            /*Users users = new UsersImpl(appFacebookClient);
-            User fbUser = users.get(userId);*/
-            System.out.println(fbUser.getEmail());
+            User fbUser = appFacebookClient.fetchObject(userId, User.class, Parameter.with("fields", "email,picture.type("+fbImageType+")"));
             User.Picture picture = fbUser.getPicture();
             return fetchPicture(picture.getUrl());
         }catch (FacebookOAuthException e){

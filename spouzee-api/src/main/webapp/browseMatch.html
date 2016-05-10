@@ -1,0 +1,99 @@
+<table style="margin-top:4%;">
+    <tr align="top">
+        <td valign="top" width="25%" align="left">
+            <form class="form-vertical" role="form">
+            <div  class="option-button" style="overflow:scroll; overflow-x: hidden; height:550px; width:95%;">
+                <button ng-repeat="x in matches" type="submit" style="border: 2px solid #99ccff" class="btn btn-block"
+                        ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.userId)]"
+                        ng-click="viewMatch(x.userId, x.matchId)">
+                    <table>
+                        <tr align="center">
+                            <font color="#1e8eb8" size="3"><strong>{{ x.name }}</strong></font><br>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr align="center">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td  style="width:4%;height:2%;"><img http-src="/spouzee-api/v1/users/{{userId}}/picture?size=square&ru={{userId}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:4%;height:2%;">
+                                                        <div ng-show="x.selfExpectationMatch > 70" style="background-color:#33cc33;" align="center">{{x.selfExpectationMatch}}%</div>
+                                                        <div ng-show="x.selfExpectationMatch < 30" style="background-color:#ff0000;" align="center">{{x.selfExpectationMatch}}%</div>
+                                                        <div ng-show="x.selfExpectationMatch > 30 && x.selfExpectationMatch < 70" style="background-color:#ff6600;" align="center">{{x.selfExpectationMatch}}%</div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width:4%;height:2%;">
+                                            <div ng-show="!x.interestExpressed && !x.otherUserExpressedInterest" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-info" ng-click="showInterest(searchUserId)">Request Identity</button>
+                                                </div>
+                                            </div>
+                                            <div ng-show="x.otherUserExpressedInterest && !x.irespondedToOtherUsersInterest" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-info" ng-click="respondToInterest(searchUserId)">Reveal Identity</button>
+                                                </div>
+                                            </div>
+                                            <div ng-show="x.interestExpressed && !x.respondedToInterest" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-info" ng-click="">Identity Requested</button>
+                                                </div>
+                                            </div>
+                                            <div ng-show="x.identityExchanged && (!x.irequestedContact && !x.otherUserRequestedContact)" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-primary" ng-click="requestContact(searchUserId)">Request Contact</button>
+                                                </div>
+                                            </div>
+                                            <div ng-show="x.identityExchanged && (x.irequestedContact && !x.otherUserRevealedContact)" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-primary" ng-click="">Contact Requested</button>
+                                                </div>
+                                            </div>
+                                            <div ng-show="x.identityExchanged && (x.otherUserRequestedContact && !x.irevealedContact)" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-primary" ng-click="revealContact(searchUserId)">Reveal Contact</button>
+                                                </div>
+                                            </div>
+                                            <div ng-show="x.identityExchanged && (
+                                            (x.otherUserRequestedContact && x.irevealedContact) || (x.irequestedContact && x.otherUserRevealedContact) )" class="form-group">
+                                                <div class="col-sm-offset-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-success" ng-click="showContact(searchUserId)">View Contact</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td align="right" style="width:4%;height:2%;"><img http-src="/spouzee-api/v1/users/{{x.userId}}/picture?size=square&ru={{userId}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:4%;height:2%;">
+                                                        <div ng-show="x.otherExpectationMatch > 70" style="background-color:#33cc33;" align="center">{{x.otherExpectationMatch}}%</div>
+                                                        <div ng-show="x.otherExpectationMatch < 30" style="background-color:#ff0000;" align="center">{{x.otherExpectationMatch}}%</div>
+                                                        <div ng-show="x.otherExpectationMatch > 30 && x.otherExpectationMatch < 70" style="background-color:#ff6600;" align="center">{{x.otherExpectationMatch}}%</div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </button>
+            </div>
+            </form>
+        </td>
+        <td width="50%" align="left">
+            <div style="overflow:auto; overflow-x: hidden; height:500px; width:75%;">
+                <!--<div ng-include="'/spouzee-api/reportScrolling.html'" ng-controller="scrollReportCtrl"/>-->
+                <div ng-include="'/spouzee-api/userDetails.html'" ng-controller="userDetailsCtrl"/>
+            </div>
+        </td>
+    </tr>
+</table>

@@ -1,14 +1,14 @@
 package com.spouzee.server.api.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spouzee.server.api.data.CreateUserResponse;
 import com.spouzee.server.api.exception.*;
 import com.spouzee.server.api.schema.*;
 import com.spouzee.server.api.schema.common.UserSignUpData;
 import com.spouzee.server.api.service.QuestionService;
 import com.spouzee.server.api.service.UserService;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,19 +40,24 @@ public class UsersResource {
 
     @POST
     @Consumes("application/json")
-    public Response createUser(String userDetailsWrapper){
+    public Response createUser(@HeaderParam("sid") String sid, String userDetailsWrapper){
         logger.debug("Create user request body : "+userDetailsWrapper);
-        UserSignUpData userSignUpData = null;
         long userId=-1;
         try {
-            userSignUpData = convertUserSignUpDataStringToJSON(userDetailsWrapper);
-            logger.debug("Received request to create user for emailId {}", userSignUpData.getEmail());
-            CreateUserResponse createUserResponse = userService.createUser(userSignUpData);
+            UserToken userToken = convertTokenWrapperStringToJSON(userDetailsWrapper);
+            logger.debug("Received request to create user for emailId {}", userToken.getEmail());
+            CreateUserResponse createUserResponse = userService.createUser(userToken);
             String userUri = "/v1/users/" + createUserResponse.getUserId();
-            if(createUserResponse.isUserAlreadyExists()){
-                return Response.ok().header("Location", userUri).build();
+            String sessionId = userService.getSessionId(sid, createUserResponse.getUserId(), userToken);
+            if(sessionId == null){
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            if(createUserResponse.isUserAlreadyExists() && createUserResponse.isProfileDataSubmitted()){
+                return Response.ok().header("Location", userUri).header("sid", sessionId).build();
+            }else if(createUserResponse.isUserAlreadyExists() && !createUserResponse.isProfileDataSubmitted()){
+                return Response.noContent().header("Location", userUri).header("sid", sessionId).build();
             }else{
-                return Response.created(new URI(userUri)).build();
+                return Response.created(new URI(userUri)).header("sid", sessionId).build();
             }
         } catch (IOException e) {
             logger.error("Error while converting input JSON to Object", e);
@@ -131,6 +136,9 @@ public class UsersResource {
         } catch (UserNotFoundException e) {
             logger.error("User ID {} not found", userId, e);
             return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (ParseException e) {
+            logger.error("Invalid Date of birth received for userID {}", userId, e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
@@ -213,10 +221,10 @@ public class UsersResource {
     @GET
     @Path("/{user_id}/profile")
     @Produces("application/json")
-    public Response getUserProfile(@PathParam("user_id") Long userId){
+    public Response getUserProfile(@PathParam("user_id") Long userId, @QueryParam("ru") long ruId){
 
         try {
-            UserDetails userDetails = userService.getProfile(userId);
+            UserDetails userDetails = userService.getProfile(userId, ruId);
             String userDetailsJSONStr = convertUserDetailsObjectToJSONString(userDetails);
             return Response.ok().type("application/json").entity(userDetailsJSONStr).build();
         } catch (IOException e) {
@@ -228,9 +236,12 @@ public class UsersResource {
     @GET
     @Path("/{user_id}/picture")
     @Produces("image/jpeg")
-    public Response getUserProfilePicture(@PathParam("user_id") Long userId){
+    public Response getUserProfilePicture(@PathParam("user_id") Long userId, @QueryParam("ru") long ruId, @QueryParam("size") String size){
         try {
-            byte[] profilePicture = userService.getProfilePicture(userId);
+            if(size == null || size.isEmpty()){
+                size = "normal";
+            }
+            byte[] profilePicture = userService.getProfilePicture(userId, size);
             return Response.ok().entity(profilePicture).build();
         } catch (AccountNotLinkedException e) {
             logger.error("{} account not linked for user {}", e.getMessage(), userId);
@@ -238,10 +249,50 @@ public class UsersResource {
         }
     }
 
+    @POST
+    @Path("/{user_id}/images")
+    @Consumes("multipart/form-data")
+    public Response saveUserImage(@PathParam("user_id") Long userId, MultipartFormDataInput input){
+        try {
+            userService.storeUserImage(userId, input);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (IOException e) {
+            logger.error("Error while parsing request body", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/{user_id}/images")
+    @Produces("application/json")
+    public Response getUserImages(@PathParam("user_id") Long userId, @QueryParam("ru") long ruId){
+        try {
+            List<UserImagePojo> userImages = userService.getUserImages(userId);
+            return Response.ok().entity(convertUserImagePojoListToJSONString(userImages)).build();
+        } catch (IOException e) {
+            logger.error("Error while converting JSON Object to string", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/{user_id}/images/{image_id}")
+    @Produces("application/json")
+    public Response getUserImageContent(@PathParam("user_id") Long userId, @PathParam("image_id") Long imageId, @QueryParam("size") String size){
+        ImagePojo imageContent = null;
+        try {
+            imageContent = userService.getUserImageContent(imageId, size);
+        } catch (IOException e) {
+            logger.error("Error while resizing image", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.ok().header("Content-Type", imageContent.getContentType()).entity(imageContent.getContent()).build();
+    }
+
     @GET
     @Path(("/{user_id}/questions"))
     @Produces("application/json")
-    public Response getQuestions(@QueryParam("lastQuestionId") long lastQuestionId, @QueryParam("pageSize") int pageSize){
+    public Response getQuestions(@PathParam("user_id") long userId, @QueryParam("lastQuestionId") long lastQuestionId, @QueryParam("pageSize") int pageSize){
         if(pageSize <= 0) pageSize = 1;
         try {
             List<Question> questions = questionService.getQuestions(lastQuestionId, pageSize);
@@ -276,8 +327,28 @@ public class UsersResource {
     @Produces("application/json")
     public Response getResponseDetail(@PathParam("user_id") long userId, @QueryParam("lastQuestionId") long lastQuestionId, @QueryParam("pageSize") int pageSize){
         try {
+            logger.debug("Received request for getResponseDetail for userId : "+userId+", lastQuestionId : "+lastQuestionId+", pageSize : "+pageSize);
             List<Question> questions = userService.getQuestionsWithResponse(userId, lastQuestionId, pageSize);
             if(questions == null || questions.isEmpty()){
+                logger.debug("getResponseDetail :: no content available for userId : "+userId);
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
+            String questionsJSON = convertQuestionsListToJSONString(questions);
+            return Response.ok().entity(questionsJSON).build();
+        } catch (IOException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path(("/{user_id}/quesNext"))
+    @Produces("application/json")
+    public Response getNextQuestions(@PathParam("user_id") long userId, @QueryParam("lastQuestionId") long lastQuestionId, @QueryParam("pageSize") int pageSize){
+        try {
+            logger.debug("Received request for getResponseDetail for userId : "+userId+", lastQuestionId : "+lastQuestionId+", pageSize : "+pageSize);
+            List<Question> questions = userService.getNextQuestionsForUser(userId, lastQuestionId, pageSize);
+            if(questions == null || questions.isEmpty()){
+                logger.debug("getResponseDetail :: no content available for userId : "+userId);
                 return Response.status(Response.Status.NO_CONTENT).build();
             }
             String questionsJSON = convertQuestionsListToJSONString(questions);
@@ -301,6 +372,65 @@ public class UsersResource {
         }
     }
 
+    @GET
+    @Path("/{user_id}/match")
+    @Produces("application/json")
+    public Response getMatchingProfiles(@PathParam("user_id") Long userId){
+
+        try {
+            List<Match> matchList = userService.getMatch(userId);
+            String matchListJSONStr = convertMatchListToJSONString(matchList);
+            return Response.ok().type("application/json").entity(matchListJSONStr).build();
+        } catch (IOException e) {
+            logger.error("Error while converting JSON Object to string", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (UserNotFoundException e) {
+            logger.error("User ID {} not found", userId, e);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @POST
+    @Path("/{user_id}/interest")
+    public Response saveInterestExpression(@PathParam("user_id") Long userId, @QueryParam("otherUserId") Long otherUserId){
+        userService.saveInterestExpression(userId, otherUserId);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{user_id}/interestResponse")
+    public Response saveInterestResponse(@PathParam("user_id") Long userId, @QueryParam("otherUserId") Long otherUserId){
+        String emailId = userService.saveInterestResponse(userId, otherUserId);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{user_id}/requestContact")
+    public Response saveContactRequest(@PathParam("user_id") Long userId, @QueryParam("otherUserId") Long otherUserId){
+        userService.saveContactRequest(userId, otherUserId);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{user_id}/revealContact")
+    public Response saveContactResponse(@PathParam("user_id") Long userId, @QueryParam("otherUserId") Long otherUserId){
+        String emailId = userService.saveContactResponse(userId, otherUserId);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{user_id}/contact")
+    public Response getUserContact(@PathParam("user_id") Long userId, @QueryParam("otherUserId") Long otherUserId){
+        String emailId = userService.getContact(otherUserId);
+        return Response.ok().entity(new String("{\"email\" : \""+emailId+"\"}")).build();
+    }
+
+    private String convertMatchListToJSONString(List<Match> matchList) throws JsonProcessingException {
+        com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+        String matchesJSON = objectMapper.writeValueAsString(matchList);
+        return matchesJSON;
+    }
+
     private UserQuestion covertUserQuestionStringToJsonObject(String questionJson) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         UserQuestion userQuestion = objectMapper.readValue(questionJson.getBytes(), UserQuestion.class);
@@ -317,6 +447,12 @@ public class UsersResource {
         ObjectMapper objectMapper = new ObjectMapper();
         String questionJSON = objectMapper.defaultPrettyPrintingWriter().writeValueAsString(questions);
         return questionJSON;
+    }
+
+    private String convertUserImagePojoListToJSONString(List<UserImagePojo> userImagePojos) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userImageListJSON = objectMapper.defaultPrettyPrintingWriter().writeValueAsString(userImagePojos);
+        return userImageListJSON;
     }
 
     private UserToken convertTokenWrapperStringToJSON(String tokenWrapperStr) throws IOException {

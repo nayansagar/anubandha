@@ -39,7 +39,6 @@ public class SpzQuestionDao {
             return null;
         }
         for(Question question : questions){
-            hibernateTemplate.initialize(question.getScenario());
             hibernateTemplate.initialize(question.getOptions());
         }
 
@@ -56,7 +55,7 @@ public class SpzQuestionDao {
 
     public void saveResponse(long userId, long questionId, String optionIds, String comment) throws InvalidUserException, InvalidQuestionException, InvalidOptionException {
 
-        User user = spzUserDao.getUser(userId);
+        User user = spzUserDao.getUserWithResponses(userId);
         if(user == null){
             throw new InvalidUserException();
         }
@@ -65,12 +64,34 @@ public class SpzQuestionDao {
             throw new InvalidQuestionException();
         }
 
-        Response response = new Response();
+        Response response = getCurrentResponse(user, question.getId());
+        if(response == null){
+            response = new Response();
+        }
         response.setUser(user);
         response.setQuestion(question);
         response.setOption(optionIds);
         response.setComment(comment);
+        response.setAskCount(response.getAskCount() + 1);
 
-        hibernateTemplate.save(response);
+        hibernateTemplate.saveOrUpdate(response);
+    }
+
+    private Response getCurrentResponse(User user, long questionId) {
+        for(Response res : user.getResponses()){
+            if(res.getQuestion().getId() == questionId){
+                return res;
+            }
+        }
+        return null;
+    }
+
+    private int getCurrentAskCount(List<Response> responses, long questionId) {
+        for(Response res : responses){
+            if(res.getQuestion().getId() == questionId){
+                return res.getAskCount();
+            }
+        }
+        return 0;
     }
 }

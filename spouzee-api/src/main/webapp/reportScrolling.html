@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="/spouzee-api/static/css/gallery.css">
+<div ng-controller="scrollReportCtrl">
+    <!--<div align="left">
+        <h3 align="left"><font color="#1e8eb8"><strong>{{profileData.name}}</strong></font></h3>
+    </div>
+    <table class="profile-info-table">
+        <tr>
+            <td style="width:40%;">
+                <div align="center">
+                    <img ng-src="/spouzee-api/v1/users/{{searchUserId}}/picture"/>
+                </div>
+            </td>
+            <td style="width:60%;">
+                <table align="right" valign="top">
+                    <tr ng-show="profileData.dateOfBirth"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Date of birth</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;">{{profileData.dateOfBirth}}</td></tr>
+                    <tr ng-show="profileData.employment"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Employment</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.employment}}</td></tr>
+                    <tr ng-show="profileData.qualification"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Qualification</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.qualification}}</td></tr>
+                    <tr ng-show="profileData.language"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Language</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.language}}</td></tr>
+                    <tr ng-show="profileData.religion"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Religion</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.religion}}</td></tr>
+                    <tr ng-show="profileData.caste"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Caste</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.caste}}</td>
+                    <tr ng-show="profileData.subcaste"><td style="border-bottom: 1px solid #99ccff;"><font color="#1e8eb8"><b>Sub caste</b></font></td><td style="border-bottom: 1px solid #99ccff;"><font color="#ffffff">whiteeee</font></td><td style="border-bottom: 1px solid #99ccff;" align="left">{{profileData.subcaste}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    &lt;!&ndash; slider container &ndash;&gt;
+    <div class="container slider">
+
+        &lt;!&ndash; enumerate all photos &ndash;&gt;
+        <img
+                ng-repeat="photo in photos"
+                class="slide"
+                ng-swipe-right="showPrev()"
+                ng-swipe-left="showNext()"
+                ng-show="isGalleryActive($index)"
+                ng-src="/spouzee-api/v1/users/{{userId}}/images/{{photo.id}}?size=large"
+                />
+
+        &lt;!&ndash; prev / next controls &ndash;&gt;
+        <a class="arrowprev" href="#" ng-click="showPrev()"></a>
+        <a class="arrownext" href="#" ng-click="showNext()"></a>
+
+        &lt;!&ndash; extra navigation controls &ndash;&gt;
+        <ul class="navv">
+            <li ng-repeat="photo in photos" ng-class="{'active':isGalleryActive($index)}">
+                <img
+                        src="/spouzee-api/v1/users/{{userId}}/images/{{photo.id}}?size=small"
+                        alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);" />
+            </li>
+        </ul>
+    </div>-->
+    <table>
+        <br>
+        <tr ng-repeat="q in questions">
+            <!--<td><div ng-include="'/spouzee-api/profile.html'"></div></td>-->
+            <td align="left">
+                <div class="scroll-questions-form">
+                    <p class="scenario-text"><font color="#1e8eb8" size="3"><strong>{{q.questionDescription}}</strong></font></p>
+                    <!--<p class="scenario-text"><br>{{question.questionDescription}}</p>-->
+                    <form>
+                        <div>
+                            <div class="scroll-option-button">
+                                <button ng-repeat="x in q.options" type="submit" style="white-space: normal;align:left" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]">
+                                    {{ x.description }}
+                                </button>
+                                <br>
+                                <h5 ng-show="q.comments"><u>Comment</u></h5>
+                                <p style="align:center;color:blue"><i>{{q.comments}}</i></p>
+                                <!--<button type="submit" class="btn btn-primary btn-block" ng-click="nextButtonClicked()">Next</button>-->
+                            </div>
+                        </div>
+                        <br>
+                    </form>
+                </div>
+            </td>
+    </table>
+</div>
+
+

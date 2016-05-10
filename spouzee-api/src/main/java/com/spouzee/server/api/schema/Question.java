@@ -26,6 +26,8 @@ public class Question {
 
     private String comments;
 
+    private boolean isPartOfQuestionnaire=false;
+
     public long getId() {
         return id;
     }
@@ -96,5 +98,13 @@ public class Question {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public void setPartOfQuestionnaire(boolean b) {
+        this.isPartOfQuestionnaire=b;
+    }
+
+    public boolean isPartOfQuestionnaire(){
+        return isPartOfQuestionnaire;
     }
 }

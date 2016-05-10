@@ -1,7 +1,7 @@
 <table>
     <tr>
-        <td><div ng-include="'/spouzee-api/profile.html'"></div></td>
-        <td>
+        <!--<td><div ng-include="'/spouzee-api/profile.html'"></div></td>-->
+        <td valign="top">
             <div class="questions-form"  ng-show="!createQuestion">
                 <p class="scenario-text">
                     <font color="#1e8eb8" size="5"><strong>Create Your Questionnaire</strong></font>
@@ -12,9 +12,18 @@
                 <form>
                     <div>
                         <div class="option-button">
-                            <button ng-repeat="x in question.options" type="submit" style="white-space: normal;" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]" ng-click="submitDetails(x.id)">
+                            <table align="center">
+                                <tr ng-repeat="x in question.options" align="center">
+                                    <td>
+                                        <button type="submit" style="white-space: normal;" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]" ng-click="submitDetails(x.id)">
+                                            {{ x.description }}
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--<button ng-repeat="x in question.options" type="submit" style="white-space: normal;" class="btn btn-block" ng-class="{true: 'btn-info', false: 'btn-default'}[isActive(x.id)]" ng-click="submitDetails(x.id)">
                                 {{ x.description }}
-                            </button>
+                            </button>-->
                             <br>
                             <div class="btn-group btn-group-justified">
                                 <div class="btn-group"><button type="submit" class="btn btn-primary" ng-click="addToQuestionnaire()">Add to Questionnaire</button></div>

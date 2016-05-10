@@ -6,6 +6,9 @@ import com.spouzee.server.api.schema.common.Enums;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
  */
 public class UtilTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main2(String[] args) throws IOException {
         UserDetails userDetails = new UserDetails();
 
         userDetails.setCaste("abc");
@@ -41,5 +44,24 @@ public class UtilTest {
 
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writeValueAsString(userDetails));
+    }
+
+    public static void main(String[] args) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try
+        {
+            SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            System.out.println(dateFormat1.format(dateFormat2.parse("2015-10-04 00:09:22")));
+
+            /*java.util.Date date = simpleDateFormat.parse("20/06/1987");
+
+            System.out.println("date : "+date);*/
+        }
+        catch (ParseException ex)
+        {
+            System.out.println("Exception "+ex);
+        }
+
     }
 }

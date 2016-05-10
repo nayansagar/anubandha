@@ -49,11 +49,23 @@ public class User implements Serializable{
     @Column(name = "role")
     private String role;
 
+    @Column(name = "maritalStatus")
+    private String maritalStatus;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     private List<UserLink> userLinks;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-    private UserCredential userCredential;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<UserImage> userImages;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<Session> userSessions;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<Expectation> expectations;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<Response> responses;
 
     public List<UserLink> getUserLinks() {
         return userLinks;
@@ -158,11 +170,43 @@ public class User implements Serializable{
         this.role = role;
     }
 
-    public UserCredential getUserCredential() {
-        return userCredential;
+    public List<Expectation> getExpectations() {
+        return expectations;
     }
 
-    public void setUserCredential(UserCredential userCredential) {
-        this.userCredential = userCredential;
+    public void setExpectations(List<Expectation> expectations) {
+        this.expectations = expectations;
+    }
+
+    public List<Response> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<Response> responses) {
+        this.responses = responses;
+    }
+
+    public List<UserImage> getUserImages() {
+        return userImages;
+    }
+
+    public void setUserImages(List<UserImage> userImages) {
+        this.userImages = userImages;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public List<Session> getUserSessions() {
+        return userSessions;
+    }
+
+    public void setUserSessions(List<Session> userSessions) {
+        this.userSessions = userSessions;
     }
 }

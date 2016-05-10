@@ -1,0 +1,58 @@
+<div ng-controller="scenarioDiscussionCtrl">
+    <table>
+        <tr>
+            <td>
+                <div class="scenario-discussion-form">
+                    <p class="scenario-text"><font color="#1e8eb8" size="3"><strong>{{scenario.descripton}}</strong></font></p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <div style="overflow:auto; overflow-x: hidden; min-height:50%; max-height:50%; min-width:90%; max-width:90%;">
+            <td align="left" valign="top">
+                    <table align="left">
+                        <tr ng-repeat="x in discussion">
+                            <td style="padding-bottom: 2px;">
+                                    <table>
+                                        <tr>
+                                            <td><img http-src="/spouzee-api/v1/users/{{x.userId}}/picture?size=small&ru={{userId}}"></td>
+                                            <td>
+                                                <p style="background-color:{{x.bgcolor}};border: 2px solid #cccccc;border-radius: 8px;" align="{{x.align}}">{{ x.message }}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                            </td>
+                        </tr>
+                    </table>
+            </td>
+            </div>
+        </tr>
+        <tr>
+            <td valign="top">
+                <div>
+                    <textarea maxlength="480" id="message" ng-model="message" placeholder="..."></textarea>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td valign="top">
+                <div class="btn-group btn-group-justified" style="width: 40%;">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success btn-block" ng-click="postButtonClicked()">Post Message</button>
+                    </div>
+                </div>
+            </td>
+            <td valign="top"><div><p class="scenario-text"><font color="#ffffff" size="3">......</font></p></div></td>
+            <td valign="top">
+                <div class="btn-group btn-group-justified" style="width: 40%;">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success btn-block" ng-click="nextScenarioRequested()">Next Scenario</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <p><strong>Note - </strong> You can go to the next scenarios only when both of you click on "Next Scenario"</p>
+</div>

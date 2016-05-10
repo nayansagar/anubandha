@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/spouzee-api/static/css/gallery.css">
+<div class="questions-form" ng-controller="uploadCtrl">
+    <font size="2"><b>Pictures are indeed worth a thousand words!</b>
+        <br><br>Upload photos of yourself, your family, your extended family, your friends...
+        <br>Anything that gives an insight into your life to the prospective alliances...</font>
+    </h5>
+    </br></br>
+    <form id="photo-upload">
+        <p>
+            Select a file : <input type="file" name="attachment" size="50"/>
+        </p>
+        <p>
+            Add description : <input type="text" name="description">
+        </p>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success" ng-click="uploadFiles()">Upload</button>
+            </div>
+        </div>
+    </form>
+    <br><br>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success" ng-click="nextScreen()">Next</button>
+        </div>
+    </div>
+</div>
